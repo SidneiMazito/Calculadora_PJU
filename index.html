@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calculadora de Salário PJU</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+    .container {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);        
+    }
+    label {
+        font-weight: bold;
+    }
+    input {
+        width: 100%;
+        padding: 8px;
+        margin: 8px 0;
+        box-sizing: border-box;
+    }
+    button {
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        margin-top: 8px;
+        cursor: pointer;
+        display: block; 
+        transform: translate(+130%, +50%);      
+    }
+ 
+    #resultado {
+        margin-top: 50px;
+        font-size: 18px;
+    }
+
+    #liquido {
+      font-weight: bold;  
+    }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Calculadora de Salário PJU</h2>
+    <label for="salario">Padrão:</label>
+    <select name="vencimento" id="salario">
+        <option value="3554.02">N1</option>
+        <option value="3660.66">N2</option>
+    </select>    
+    <button onclick="calcularSalario()">Calcular</button>
+    <div id="resultado"></div>
+</div>
+
+<script>
+    function calcularSalario() {
+        var salario = parseFloat(document.getElementById('salario').value.replace(',', '.'));
+        var gratificacao = salario * 1.4;
+        var baseCalc = salario + gratificacao
+        var contribuicaoPrevidencia = Math.min(baseCalc, 7786.02) * 0.14; // Teto da previdência em 2022: R$ 7.786,02
+        var impostoRenda = 0;
+
+        if (baseCalc <= 2259.20) {
+            impostoRenda = 0;
+        } else if (baseCalc <= 2826.65) {
+            impostoRenda = (baseCalc * 0.075) - 169.44;
+        } else if (baseCalc <= 3751.05) {
+            impostoRenda = (baseCalc * 0.15) - 381.44;
+        } else if (baseCalc <= 4664.68) {
+            impostoRenda = (baseCalc * 0.225) - 662.77;
+        } else {
+            impostoRenda = (baseCalc * 0.275) - 896.00;
+        }
+
+        var salarioLiquido = salario + gratificacao - contribuicaoPrevidencia - impostoRenda;
+
+        document.getElementById('resultado').innerHTML = `
+            <p>Vencimento: R$ ${salario.toFixed(2)}</p>
+            <p>Gratificação Judiciária: R$ ${gratificacao.toFixed(2)}</p>
+            <p>Contribuição Previdência: R$ ${contribuicaoPrevidencia.toFixed(2)}</p>
+            <p>Imposto de Renda: R$ ${impostoRenda.toFixed(2)}</p>
+            <p id="liquido">Salário Líquido: R$ ${salarioLiquido.toFixed(2)}</p>
+        `;
+    }
+</script>
+
+</body>
+</html>
